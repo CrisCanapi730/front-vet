@@ -88,10 +88,10 @@ function App() {
           <Route path="/inicio" element={<Home />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/mascotas" element={<Mascotas />} />
-          <Route path="/productos" element={<Productos />} />
+          {/* <Route path="/productos" element={<Productos />} />
           <Route path="/ventas" element={<Ventas />} />
           <Route path="/citas" element={<Citas />} />
-          <Route path="/gestionarCitas" element={<GestionarCitas />} />
+          <Route path="/gestionarCitas" element={<GestionarCitas />} /> */}
           <Route path="/login" element={<Login />} />
         </Routes>
       </main>
