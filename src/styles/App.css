@@ -1,0 +1,185 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+.datos, .listaUsuarios {
+  background-color: #ffffff;
+  padding: 20px;
+  margin-block-end: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styles */
+.datos label {
+  display: block;
+  margin-block-end: 10px;
+}
+
+.datos input {
+  inline-size: 100%;
+  padding: 10px;
+  margin-block-start: 5px;
+  margin-block-end: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.datos select {
+  inline-size: 100%;
+  padding: 10px;
+  margin-block-start: 5px;
+  margin-block-end: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+/* New styles for ID Usuario */
+.id-usuario {
+  background-color: #e9ecef;
+}
+
+.datos button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-inline-end: 10px;
+}
+
+.datos button:first-of-type {
+  background-color: #007bff;
+  color: white;
+}
+
+.datos button:nth-of-type(2) {
+  background-color: #6c757d;
+  color: white;
+}
+
+.listaUsuarios table {
+  inline-size: 100%;
+  border-collapse: collapse;
+}
+
+.listaUsuarios th, .listaUsuarios td {
+  padding: 12px;
+  text-align: start;
+  border-block-end: 1px solid #dee2e6;
+}
+
+.listaUsuarios th {
+  background-color: #f1f1f1;
+}
+
+.listaUsuarios tr:hover {
+  background-color: #f8f9fa;
+}
+
+.listaUsuarios button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.listaUsuarios button:first-of-type {
+  background-color: #28a745;
+  color: white;
+}
+
+.listaUsuarios button:nth-of-type(2) {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Header styles */
+header h1 {
+  margin: 0;
+}
+
+header nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+header nav ul li {
+  margin-inline-start: 20px;
+}
+
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+header nav ul li a:hover {
+  background-color: #495057;
+}
+
+.listaMascotas {
+  background-color: #ffffff;
+  padding: 20px;
+  margin-block-end: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.listaMascotas table {
+  inline-size: 100%;
+  border-collapse: collapse;
+}
+
+.listaMascotas th, .listaMascotas td {
+  padding: 12px;
+  text-align: start;
+  border-block-end: 1px solid #dee2e6;
+}
+
+.listaMascotas th {
+  background-color: #f1f1f1;
+}
+
+.listaMascotas tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Botones para la lista de mascotas */
+.listaMascotas button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Botón Actualizar */
+.listaMascotas button.btn-update {
+  background-color: #28a745; /* Color verde para el botón de actualizar */
+  color: white;
+}
+
+/* Botón Eliminar */
+.listaMascotas button.btn-delete {
+  background-color: #dc3545; /* Color rojo para el botón de eliminar */
+  color: white;
+}

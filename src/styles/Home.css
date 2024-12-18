@@ -1,0 +1,169 @@
+.Home {
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1; /* Asegura que ocupe el espacio disponible */
+}
+
+.Home h1 {
+    font-size: 2.5em;
+    margin-block-end: 20px;
+    text-align: center; /* Mantén el título centrado */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Titulo {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Añade espacio entre el texto estático y el dinámico */
+}
+
+.static-text {
+    text-align: start;
+}
+
+.dynamic-text {
+    white-space: nowrap; /* Previene que el texto dinámico se divida en líneas */
+    margin-inline-start: 10px; /* Asegura un pequeño margen entre el texto estático y dinámico */
+}
+
+/* Colores para el texto dinámico */
+.color1 {
+    color: #FF5733; /* Rojo */
+}
+
+.color2 {
+    color: #256d32; /* Verde */
+}
+
+.color3 {
+    color: #133cf3; /* Azul */
+}
+
+.color4 {
+    color: #FF33A1; /* Rosa */
+}
+
+.color5 {
+    color: #FF8C33; /* Naranja */
+}
+
+/* Estilos para los párrafos */
+.Home p {
+    font-size: 1.2em;
+    color: #6c757d;
+    margin-block-end: 20px;
+    text-align: justify; /* Hace que el texto esté alineado a la izquierda y justificado */
+    line-height: 1.6; /* Mejora la legibilidad del texto */
+}
+
+/* Estilos para la imagen */
+.home-image {
+    inline-size: 100%;
+    max-inline-size: 600px; /* Limita el tamaño máximo de la imagen */
+    block-size: auto;
+    margin: 20px auto; /* Centra la imagen horizontalmente */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade sombra para un efecto visual agradable */
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Espacio entre las tarjetas */
+    margin-top: 20px; /* Espacio entre la imagen y las tarjetas */
+}
+
+.card {
+    width: 200px; /* Ajusta el ancho según sea necesario */
+    height: 300px; /* Ajusta la altura según sea necesario */
+    perspective: 1000px; /* Mejora el efecto de 3D */
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d; /* Mantiene el contenido en 3D */
+    cursor: pointer;
+}
+
+.card:hover .card-inner {
+    transform: rotateY(180deg); /* Voltea la tarjeta */
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Oculta la parte de atrás al voltear */
+}
+
+.card-front {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff; /* Color de fondo de la parte frontal */
+    border: 1px solid #ccc; /* Borde opcional */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Sombra para un efecto agradable */
+}
+
+.card-back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #032a56; /* Color de fondo de la parte trasera */
+    color: white; /* Color del texto en la parte trasera */
+    transform: rotateY(180deg); /* Voltea la parte de atrás */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Sombra para un efecto agradable */
+}
+
+/* Asegúrate que las imágenes en la parte frontal estén ajustadas correctamente */
+.card-front img {
+    width: 80%; /* Ajusta el ancho de la imagen */
+    height: auto; /* Mantiene la proporción de la imagen */
+    margin-top: 10px; /* Espacio superior */
+}
+
+.card-back p {
+    text-align: center; /* Centra el texto en la parte trasera */
+}
+/* Barra de texto deslizante */
+.sliding-bar {
+    background-color: #032a56; /* Color de fondo negro */
+    color: #fff; /* Color del texto blanco */
+    padding: 20px 0; /* Mantiene el padding para la altura de la barra */
+    overflow: hidden; /* Oculta el texto cuando sale de la vista */
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.sliding-text {
+    white-space: nowrap; /* Evita que el texto se ajuste a nuevas líneas */
+    position: absolute;
+    font-size: 1.8em; /* Aumenta el tamaño del texto */
+    font-weight: bold; /* Hace el texto en negrita */
+    animation: slide 10s linear infinite;
+    top: 50%; /* Coloca el texto en la mitad verticalmente */
+    transform: translateY(-50%); /* Ajusta la posición para centrar verticalmente */
+}
+
+@keyframes slide {
+    0% {
+        transform: translate(100%, -50%); /* Empieza fuera de la pantalla, a la derecha */
+    }
+    100% {
+        transform: translate(-100%, -50%); /* Desaparece por la izquierda, centrado verticalmente */
+    }
+}
