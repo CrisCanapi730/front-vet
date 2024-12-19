@@ -24,7 +24,7 @@ function Usuarios(){
         alert("Por favor, completa todos los campos.");
         return;
         }
-        Axios.post("http://localhost:3001/create",{
+        Axios.post("https://api-vet-zeta.vercel.app/create",{
         nombre:nombre,
         correo:correo,
         contrasena:contrasena,
@@ -37,7 +37,7 @@ function Usuarios(){
     }
 
     const update = () => {
-        Axios.put("http://localhost:3001/update",{
+        Axios.put("https://api-vet-zeta.vercel.app/update",{
         id:id,
         nombre:nombre,
         correo:correo,
@@ -52,7 +52,7 @@ function Usuarios(){
     }
 
     const deleteUser = (id) => {
-        Axios.delete(`http://localhost:3001/delete/${id}`).then(()=>{
+        Axios.delete(`https://api-vet-zeta.vercel.app/delete/${id}`).then(()=>{
         getUsuarios();
         alert("Usuario ELIMINADO");
         limpiarDatos();
@@ -79,7 +79,7 @@ function Usuarios(){
     }
 
     const getUsuarios = () => {
-        Axios.get("http://localhost:3001/usuarios").then((response)=>{
+        Axios.get("https://api-vet-zeta.vercel.app/usuarios").then((response)=>{
         setUsuarios(response.data);
         });
     }
