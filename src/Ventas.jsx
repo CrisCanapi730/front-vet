@@ -19,7 +19,7 @@ function Ventas() {
     }, []);
 
     const obtenerProductos = () => {
-        Axios.get("https://api-ke1limmxf-cristian-canapis-projects.vercel.app/productos")
+        Axios.get("https://api-vet-zeta.vercel.app/productos")
             .then((response) => {
                 setListaProductos(response.data);
                 setProductosFiltrados(response.data);
