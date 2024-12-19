@@ -1,102 +1,189 @@
+import React, { useEffect, useState, useCallback } from 'react';
 import Axios from 'axios';
-import { useEffect, useState } from 'react';
-import './styles/App.css';
+import './styles/Citas.css';
 
 function Citas() {
-    // Estados para Citas
-    const [fecha, setFecha] = useState("");
-    const [hora, setHora] = useState("");
-    const [id_mascota, setIdMascota] = useState("");
-    const [id_usuario, setIdUsuario] = useState("");
-    const [especie, setEspecie] = useState(""); // Estado para la especie de la mascota
-    const [nivel_urgencia, setnivel_urgencia] = useState("bajo"); // Estado para el nivel de urgencia, con valor inicial "bajo"
-    const [editar, setEditar] = useState(false);
-    const [listaMascotas, setListaMascotas] = useState([]);
-    const [listaUsuarios, setListaUsuarios] = useState([]);
-    const [id, setId] = useState("");
+    const [state, setState] = useState({
+        fecha: "",
+        hora: "",
+        id_mascota: "",
+        id_usuario: "",
+        especie: "",
+        nivel_urgencia: "bajo",
+        editar: false,
+        id: "",
+        listaCitas: [],
+        listaMascotas: [],
+        listaUsuarios: []
+    });
 
-    useEffect(() => {
-        getMascotas(); // Obtener mascotas al cargar el componente
-        getUsuarios(); // Obtener usuarios al cargar el componente
+    const fetchData = useCallback(async () => {
+        try {
+            const [citas, mascotas, usuarios] = await Promise.all([
+                Axios.get("http://localhost:3001/citas"),
+                Axios.get("http://localhost:3001/mascotas"),
+                Axios.get("http://localhost:3001/usuarios")
+            ]);
+
+            setState(prev => ({
+                ...prev,
+                listaCitas: citas.data,
+                listaMascotas: mascotas.data,
+                listaUsuarios: usuarios.data
+            }));
+        } catch (error) {
+            console.error("Error al obtener datos:", error);
+        }
     }, []);
 
-    // Funciones para citas
-    const add = () => {
-        if (fecha.trim() === "" || hora.trim() === "" || id_mascota.trim() === "" || id_usuario.trim() === "" || especie.trim() === "" || nivel_urgencia.trim() === "") {
-            alert("Por favor, completa todos los campos.");
-            return;
-        }
-        console.log ("Datos", {"fecha":fecha, "hora":hora, "id_mascota": id_mascota, "id_usuario": id_usuario, "especie":especie, "Nivel de urgencia":nivel_urgencia});
-        Axios.post("http://localhost:3001/createCitas", {
-            fecha: fecha,
-            hora: hora,
-            id_mascota: id_mascota,
-            id_usuario: id_usuario,
-            especie: especie, // Agregar especie
-            nivel_urgencia: nivel_urgencia // Agregar urgencia
-        }).then(() => {
-            alert("Cita Registrada");
-            limpiarDatos();
-        }).catch((error) => {
-            console.error("Error al registrar cita:", error);
-            alert("Hubo un problema al registrar la cita.");
-        });
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+    
+
+    const handleChange = (field, value) => {
+        setState(prev => ({ ...prev, [field]: value }));
     };
 
-    const limpiarDatos = () => {
-        setFecha("");
-        setHora("");
-        setIdMascota("");
-        setIdUsuario("");
-        setEspecie(""); // Limpiar especie
-        setnivel_urgencia("bajo"); // Restablecer urgencia a "bajo"
-        setEditar(false);
+    const validarCampos = () => {
+        const camposRequeridos = ['fecha', 'hora', 'id_mascota', 'id_usuario', 'especie'];
+        const camposVacios = camposRequeridos.filter(campo => !state[campo].trim());
+        
+        if (camposVacios.length) {
+            alert(`Campos requeridos: ${camposVacios.join(', ')}`);
+            return false;
+        }
+        return true;
+    };
+
+    const verificarCitaExistente = async () => {
+        try {
+            const response = await Axios.get("http://localhost:3001/citas");
+            return response.data.some(
+                cita => cita.fecha === state.fecha && 
+                        cita.hora === state.hora && 
+                        cita.id !== state.id
+            );
+        } catch (error) {
+            console.error("Error verificando cita:", error);
+            return false;
+        }
+    };
+
+    const add = async () => {
+        if (!validarCampos()) return;
+        
+        const citaExistente = await verificarCitaExistente();
+        if (citaExistente) {
+            alert("Esta cita ya existe");
+            return;
+        }
+
+        try {
+            await Axios.post("http://localhost:3001/createCitas", {
+                fecha: state.fecha,
+                hora: state.hora,
+                id_mascota: state.id_mascota,
+                id_usuario: state.id_usuario,
+                especie: state.especie,
+                nivel_urgencia: state.nivel_urgencia
+            });
+            
+            alert("Cita Registrada");
+            limpiarDatos();
+            fetchData();
+        } catch (error) {
+            console.error("Error registrando cita:", error);
+        }
+    };
+
+    const updateCita = async () => {
+        if (!validarCampos()) return;
+
+        try {
+            await Axios.put(`http://localhost:3001/updateCitas/${state.id}`, {
+                fecha: state.fecha,
+                hora: state.hora,
+                id_mascota: state.id_mascota,
+                id_usuario: state.id_usuario,
+                especie: state.especie,
+                nivel_urgencia: state.nivel_urgencia
+            });
+            
+            alert("Cita Actualizada");
+            limpiarDatos();
+            fetchData();
+        } catch (error) {
+            console.error("Error actualizando cita:", error);
+        }
+    };
+
+    const deleteCita = async (id) => {
+        try {
+            await Axios.delete(`http://localhost:3001/deleteCitas/${id}`);
+            alert("Cita Eliminada");
+            fetchData();
+        } catch (error) {
+            console.error("Error eliminando cita:", error);
+        }
     };
 
     const editarCitas = (val) => {
-        setEditar(true);
-        setFecha(val.fecha);
-        setHora(val.hora);
-        setIdMascota(val.id_mascota);
-        setIdUsuario(val.id_usuario);
-        setEspecie(val.especie); // Establecer especie
-        setnivel_urgencia(val.nivel_urgencia); // Establecer urgencia
-        setId(val.id);
+        setState(prev => ({
+            ...prev,
+            fecha: val.fecha,
+            hora: val.hora,
+            id_mascota: val.id_mascota,
+            id_usuario: val.id_usuario,
+            especie: val.especie,
+            nivel_urgencia: val.nivel_urgencia,
+            editar: true,
+            id: val.id
+        }));
     };
 
-    const getMascotas = () => {
-        Axios.get("http://localhost:3001/mascotas").then((response) => {
-            setListaMascotas(response.data); // Guardar la lista de mascotas
-        }).catch((error) => {
-            console.error("Error al obtener mascotas:", error);
-        });
-    };
-
-    const getUsuarios = () => {
-        Axios.get("http://localhost:3001/usuarios").then((response) => {
-            setListaUsuarios(response.data); // Guardar la lista de usuarios
-        }).catch((error) => {
-            console.error("Error al obtener usuarios:", error);
-        });
+    const limpiarDatos = () => {
+        setState(prev => ({
+            ...prev,
+            fecha: "",
+            hora: "",
+            id_mascota: "",
+            id_usuario: "",
+            especie: "",
+            nivel_urgencia: "bajo",
+            editar: false,
+            id: ""
+        }));
     };
 
     return (
         <div className='App'>
+            <h2>Registrar / Gestionar Citas</h2>
+            
             <div className='datos'>
-                <label htmlFor="">Fecha: <input value={fecha} 
-                    onChange={(event) => setFecha(event.target.value)}
-                    type="date" /></label>
+                <label>Fecha: 
+                    <input 
+                        value={state.fecha} 
+                        onChange={(e) => handleChange('fecha', e.target.value)}
+                        type="date" 
+                    />
+                </label>
 
-                <label htmlFor="">Hora: <input value={hora} 
-                    onChange={(event) => setHora(event.target.value)}
-                    type="time" /></label>
+                <label>Hora: 
+                    <input 
+                        value={state.hora} 
+                        onChange={(e) => handleChange('hora', e.target.value)}
+                        type="time" 
+                    />
+                </label>
 
-                {/* Selección de mascota */}
-                <label htmlFor="">Mascota: 
-                    <select value={id_mascota} 
-                        onChange={(event) => setIdMascota(event.target.value)}>
+                <label>Mascota: 
+                    <select 
+                        value={state.id_mascota} 
+                        onChange={(e) => handleChange('id_mascota', e.target.value)}
+                    >
                         <option value="">Selecciona una mascota</option>
-                        {listaMascotas.map(mascota => (
+                        {state.listaMascotas.map(mascota => (
                             <option key={mascota.id} value={mascota.id}>
                                 {mascota.nombre} ({mascota.tipo})
                             </option>
@@ -104,12 +191,13 @@ function Citas() {
                     </select>
                 </label>
 
-                {/* Selección de usuario */}
-                <label htmlFor="">Usuario: 
-                    <select value={id_usuario} 
-                        onChange={(event) => setIdUsuario(event.target.value)}>
+                <label>Usuario: 
+                    <select 
+                        value={state.id_usuario} 
+                        onChange={(e) => handleChange('id_usuario', e.target.value)}
+                    >
                         <option value="">Selecciona un usuario</option>
-                        {listaUsuarios.map(usuario => (
+                        {state.listaUsuarios.map(usuario => (
                             <option key={usuario.id} value={usuario.id}>
                                 {usuario.nombre}
                             </option>
@@ -117,33 +205,76 @@ function Citas() {
                     </select>
                 </label>
 
-                {/* Campo para especie */}
-                <label htmlFor="">Especie: 
-                    <input value={especie} 
-                        onChange={(event) => setEspecie(event.target.value)} 
-                        type="text" placeholder="Especie de la mascota" />
+                <label>Especie: 
+                    <input 
+                        value={state.especie} 
+                        onChange={(e) => handleChange('especie', e.target.value)} 
+                        type="text" 
+                        placeholder="Especie de la mascota" 
+                    />
                 </label>
 
-                {/* Selección de nivel de urgencia */}
-                <label htmlFor="">Nivel de urgencia: 
-                    <select value={nivel_urgencia} 
-                        onChange={(event) => setnivel_urgencia(event.target.value)}>
+                <label>Nivel de urgencia: 
+                    <select 
+                        value={state.nivel_urgencia} 
+                        onChange={(e) => handleChange('nivel_urgencia', e.target.value)}
+                    >
                         <option value="bajo">Bajo</option>
                         <option value="medio">Medio</option>
                         <option value="alto">Alto</option>
                     </select>
                 </label>
 
-                <div>
-                    {editar ? (
+                <div className="btn-container">
+                    {state.editar ? (
                         <>
-                            <button className="btn btn-update" onClick={update}>Actualizar</button>
+                            <button className="btn btn-update" onClick={updateCita}>Actualizar</button>
                             <button className="btn btn-delete" onClick={limpiarDatos}>Cancelar</button>
                         </>
                     ) : (
                         <button className="btn btn-update" onClick={add}>Registrar Cita</button>
                     )}
                 </div>
+            </div>
+
+            <div className="listaCitas">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Mascota</th>
+                            <th>Usuario</th>
+                            <th>Especie</th>
+                            <th>Nivel de urgencia</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {state.listaCitas.map((val) => {
+                            const mascota = state.listaMascotas.find(m => m.id === val.id_mascota);
+                            const usuario = state.listaUsuarios.find(u => u.id === val.id_usuario);
+                            return (
+                                <tr key={val.id}>
+                                    <td>{val.id}</td>
+                                    <td>{val.fecha}</td>
+                                    <td>{val.hora}</td>
+                                    <td>{mascota ? mascota.nombre : "No especificado"}</td>
+                                    <td>{usuario ? usuario.nombre : "No especificado"}</td>
+                                    <td>{val.especie}</td>
+                                    <td>{val.nivel_urgencia}</td>
+                                    <td>
+                                        <div>
+                                            <button className="btn btn-update" onClick={() => editarCitas(val)}>Actualizar</button>
+                                            <button className="btn btn-delete" onClick={() => deleteCita(val.id)}>Eliminar</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </div>
         </div>
     );
