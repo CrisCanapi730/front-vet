@@ -77,8 +77,8 @@ function App() {
       <Header />
       <main>
         <ToastContainer />
-        <button onClick={loginAnonymously}>Iniciar sesión anónimo</button>
-        <button onClick={enableNotifications}>Habilitar notificaciones</button>
+        {/* <button onClick={loginAnonymously}>Iniciar sesión anónimo</button>
+        <button onClick={enableNotifications}>Habilitar notificaciones</button> */}
         <Routes>
         <Route path="/" element={<Home />} />
           <Route path="/" element={<Home />} />
