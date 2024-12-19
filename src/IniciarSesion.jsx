@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Axios from 'axios';
 import PropTypes from 'prop-types';
-import videoBackground from './assets/videovet.mp4'; // Ruta del video
+import videoBackground from './assets/videovet.mp4';
 
 function IniciarSesion({ onLogin }) {
   const [nombre, setNombre] = useState('');
@@ -36,15 +36,14 @@ function IniciarSesion({ onLogin }) {
     );
 
     if (usuarioEncontrado) {
-      if (usuarioEncontrado.es_administrador) {
+      const esAdmin = usuarioEncontrado.rol === 'admin';
+      if (esAdmin) {
         alert(`Bienvenido administrador, ${usuarioEncontrado.nombre}`);
-        localStorage.setItem('usuario', JSON.stringify(usuarioEncontrado));
-        onLogin({ ...usuarioEncontrado, esAdmin: 'admin' });
       } else {
         alert(`Bienvenido, ${usuarioEncontrado.nombre}`);
-        localStorage.setItem('usuario', JSON.stringify(usuarioEncontrado));
-        onLogin({ ...usuarioEncontrado, esAdmin: 'user' });
       }
+      localStorage.setItem('usuario', JSON.stringify(usuarioEncontrado));
+      onLogin({ ...usuarioEncontrado, esAdmin });
     } else {
       alert('Usuario o contraseña incorrectos.');
     }
@@ -68,6 +67,7 @@ function IniciarSesion({ onLogin }) {
       nombre,
       correo,
       contrasena,
+      rol: 'user' // Por defecto, los nuevos usuarios son 'user'
     })
       .then(() => {
         alert('Usuario registrado exitosamente.');
@@ -108,12 +108,12 @@ function IniciarSesion({ onLogin }) {
       fontSize: '24px',
       textAlign: 'center',
       marginBottom: '20px',
-      color: '#000', // Letras negras
+      color: '#000',
     },
     title: {
       fontSize: '32px',
       textAlign: 'center',
-      color: '#DAA520', // Dorado
+      color: '#DAA520',
       marginTop: '20px',
       marginBottom: '10px',
     },
@@ -136,7 +136,7 @@ function IniciarSesion({ onLogin }) {
       padding: '10px',
       fontSize: '16px',
       color: '#fff',
-      backgroundColor: '#2196f3', // Celeste
+      backgroundColor: '#2196f3',
       border: 'none',
       borderRadius: '4px',
       cursor: 'pointer',
@@ -144,7 +144,7 @@ function IniciarSesion({ onLogin }) {
       marginTop: '10px',
     },
     buttonSecondary: {
-      backgroundColor: '#2196f3', // Celeste
+      backgroundColor: '#2196f3',
     },
   };
 
@@ -182,7 +182,7 @@ function IniciarSesion({ onLogin }) {
             value={correo}
             onChange={(e) => setCorreo(e.target.value)}
             placeholder="Ingresa tu correo"
-              style={styles.input}
+            style={styles.input}
           />
         </label>
 
