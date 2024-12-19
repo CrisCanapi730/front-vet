@@ -17,11 +17,9 @@ const Header = () => {
                     <li><Link to="/inicio">Inicio</Link></li>
                     <li><Link to="/usuarios">Usuarios</Link></li>
                     <li><Link to="/mascotas">Mascotas</Link></li>
-                    {/* <li><Link to="/productos">Productos</Link></li>
-                    <li><Link to="/ventas">Ventas</Link></li>
+                    <li><Link to="/productos">Productos</Link></li>
                     <li><Link to="/citas">Citas</Link></li>
-                    <li><Link to="/gestionarCitas">Gestionar Citas</Link></li> */}
-                    <li><Link to="/login">Cerrar Sesion</Link></li>
+                    <li><Link to="/ventas">Ventas</Link></li>
                 </ul>
             </nav>
         </header>
