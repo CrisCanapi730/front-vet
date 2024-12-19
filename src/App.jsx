@@ -1,17 +1,17 @@
+
+// App.js
 import React, { useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-
 import Footer from './Footer';
 import Header from './Header';
 import Home from './Home';
 import Mascotas from './Mascotas';
 import Citas from './Citas';
 import Ventas from './Ventas';
-import Usuarios from './Usuarios'; // Importamos la vista Usuarios
-import Productos from './Productos'; // Importamos la vista Productos
+import Usuarios from './Usuarios';
+import Productos from './Productos';
 import IniciarSesion from './IniciarSesion';
-
 import './styles/App.css';
 import './styles/Footer.css';
 import './styles/Header.css';
@@ -20,14 +20,12 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
 
-  // Función para manejar el inicio de sesión
   const login = (usuario) => {
     setIsAuthenticated(true);
     setUsuarioLogueado(usuario);
     localStorage.setItem('usuario', JSON.stringify(usuario));
   };
 
-  // Función para manejar el cierre de sesión
   const logout = () => {
     setIsAuthenticated(false);
     setUsuarioLogueado(null);
@@ -40,7 +38,7 @@ function App() {
         <IniciarSesion onLogin={login} />
       ) : (
         <>
-          <Header logout={logout} />
+          <Header usuarioLogueado={usuarioLogueado} />
           <main>
             <ToastContainer />
             <div className="auth-actions">
@@ -53,7 +51,6 @@ function App() {
               <Route path="/ventas" element={<Ventas />} />
               <Route path="/mascotas" element={<Mascotas usuarioLogueado={usuarioLogueado} />} />
               <Route path="/citas" element={<Citas />} />
-
               {/* Rutas para Administradores */}
               {usuarioLogueado?.esAdmin && (
                 <>
@@ -61,7 +58,6 @@ function App() {
                   <Route path="/productos" element={<Productos />} />
                 </>
               )}
-
               {/* Rutas para usuarios regulares */}
               {!usuarioLogueado?.esAdmin && (
                 <>
@@ -69,7 +65,6 @@ function App() {
                   <Route path="/productos" element={<Navigate to="/inicio" />} />
                 </>
               )}
-
               {/* Redirección a /inicio para rutas no existentes */}
               <Route path="*" element={<Navigate to="/inicio" />} />
             </Routes>
