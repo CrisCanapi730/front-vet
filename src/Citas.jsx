@@ -20,9 +20,9 @@ function Citas() {
     const fetchData = useCallback(async () => {
         try {
             const [citas, mascotas, usuarios] = await Promise.all([
-                Axios.get("http://localhost:3001/citas"),
-                Axios.get("http://localhost:3001/mascotas"),
-                Axios.get("http://localhost:3001/usuarios")
+                Axios.get("https://api-vet-zeta.vercel.app/citas"),
+                Axios.get("https://api-vet-zeta.vercel.app/mascotas"),
+                Axios.get("https://api-vet-zeta.vercel.app/usuarios")
             ]);
 
             setState(prev => ({
@@ -58,7 +58,7 @@ function Citas() {
 
     const verificarCitaExistente = async () => {
         try {
-            const response = await Axios.get("http://localhost:3001/citas");
+            const response = await Axios.get("https://api-vet-zeta.vercel.app/citas");
             return response.data.some(
                 cita => cita.fecha === state.fecha && 
                         cita.hora === state.hora && 
@@ -80,7 +80,7 @@ function Citas() {
         }
 
         try {
-            await Axios.post("http://localhost:3001/createCitas", {
+            await Axios.post("https://api-vet-zeta.vercel.app/createCitas", {
                 fecha: state.fecha,
                 hora: state.hora,
                 id_mascota: state.id_mascota,
@@ -101,7 +101,7 @@ function Citas() {
         if (!validarCampos()) return;
 
         try {
-            await Axios.put(`http://localhost:3001/updateCitas/${state.id}`, {
+            await Axios.put(`https://api-vet-zeta.vercel.app/updateCitas/${state.id}`, {
                 fecha: state.fecha,
                 hora: state.hora,
                 id_mascota: state.id_mascota,
@@ -120,7 +120,7 @@ function Citas() {
 
     const deleteCita = async (id) => {
         try {
-            await Axios.delete(`http://localhost:3001/deleteCitas/${id}`);
+            await Axios.delete(`https://api-vet-zeta.vercel.app/deleteCitas/${id}`);
             alert("Cita Eliminada");
             fetchData();
         } catch (error) {

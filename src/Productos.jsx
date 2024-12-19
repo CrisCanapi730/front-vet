@@ -32,7 +32,7 @@ function Productos() {
             return;
         }
 
-        Axios.post("https://api-ke1limmxf-cristian-canapis-projects.vercel.app/createProducto", {
+        Axios.post("https://api-vet-zeta.vercel.app/createProducto", {
             nombre: nombreProducto,
             descripcion: descripcionProducto,
             precio: precioProducto,
@@ -49,7 +49,7 @@ function Productos() {
     }
 
     const updateProducto = () => {
-        Axios.put("https://api-ke1limmxf-cristian-canapis-projects.vercel.app/updateProducto", {
+        Axios.put("https://api-vet-zeta.vercel.app/updateProducto", {
             cod: idProducto,
             nombre: nombreProducto,
             descripcion: descripcionProducto,
@@ -67,7 +67,7 @@ function Productos() {
     }
 
     const deleteProducto = (id) => {
-        Axios.delete(`https://api-ke1limmxf-cristian-canapis-projects.vercel.app/deleteProducto/${id}`).then(() => {
+        Axios.delete(`https://api-vet-zeta.vercel.app/deleteProducto/${id}`).then(() => {
             getProductos();
             alert("Producto Eliminado");
             limpiarDatosProducto();
@@ -98,7 +98,7 @@ function Productos() {
     }
 
     const getProductos = () => {
-        Axios.get("https://api-ke1limmxf-cristian-canapis-projects.vercel.app/productos").then((response) => {
+        Axios.get("https://api-vet-zeta.vercel.app/productos").then((response) => {
             setProductos(response.data);
         }).catch((error) => {
             console.error("Error al obtener productos:", error);

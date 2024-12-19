@@ -24,7 +24,7 @@ function Mascotas() {
             alert("Por favor, completa todos los campos.");
             return;
         }
-        Axios.post("http://localhost:3001/createMascota", {
+        Axios.post("https://api-vet-zeta.vercel.app/createMascota", {
             nombre: nombre,
             especie: especie,
             edad: edad,
@@ -37,7 +37,7 @@ function Mascotas() {
     }
 
     const update = () => {
-        Axios.put("http://localhost:3001/updateMascota", {
+        Axios.put("https://api-vet-zeta.vercel.app/updateMascota", {
             id: id,
             nombre: nombre,
             especie: especie,
@@ -51,7 +51,7 @@ function Mascotas() {
     }
 
     const deleteMascota = (id) => {
-        Axios.delete(`http://localhost:3001/deleteMascota/${id}`).then(() => {
+        Axios.delete(`https://api-vet-zeta.vercel.app/deleteMascota/${id}`).then(() => {
             alert("Mascota Eliminada");
             limpiarDatos();
             getMascotas();
@@ -76,13 +76,13 @@ function Mascotas() {
     }
 
     const getMascotas = () => {
-        Axios.get("http://localhost:3001/mascotas").then((response) => {
+        Axios.get("https://api-vet-zeta.vercel.app/mascotas").then((response) => {
             setMascotas(response.data);
         });
     }
 
     const getUsuarios = () => {
-        Axios.get("http://localhost:3001/usuarios").then((response) => {
+        Axios.get("https://api-vet-zeta.vercel.app/usuarios").then((response) => {
             setListaUsuarios(response.data); // Guardar la lista de usuarios
         });
     }
