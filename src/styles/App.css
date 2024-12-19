@@ -183,3 +183,18 @@ header nav ul li a:hover {
   background-color: #dc3545; /* Color rojo para el botón de eliminar */
   color: white;
 }
+
+.spinner {
+  border: 8px solid #f3f3f3; /* Color gris claro */
+  border-top: 8px solid #3498db; /* Color del spinner */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

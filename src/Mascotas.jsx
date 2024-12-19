@@ -12,6 +12,7 @@ function Mascotas() {
     const [listaMascotas, setMascotas] = useState([]);
     const [listaUsuarios, setListaUsuarios] = useState([]); // Nuevo estado para usuarios
     const [id, setId] = useState("");
+    const [isLoading, setIsLoading] = useState(false); // Estado para manejar el spinner
 
     useEffect(() => {
         getMascotas();
@@ -24,6 +25,7 @@ function Mascotas() {
             alert("Por favor, completa todos los campos.");
             return;
         }
+        setIsLoading(true);
         Axios.post("https://api-vet-zeta.vercel.app/createMascota", {
             nombre: nombre,
             especie: especie,
@@ -33,10 +35,13 @@ function Mascotas() {
             alert("Mascota Registrada");
             limpiarDatos();
             getMascotas();
+        }).finally(() => {
+            setIsLoading(false);
         });
     }
 
     const update = () => {
+        setIsLoading(true);
         Axios.put("https://api-vet-zeta.vercel.app/updateMascota", {
             id: id,
             nombre: nombre,
@@ -47,14 +52,19 @@ function Mascotas() {
             alert("Mascota Actualizada");
             limpiarDatos();
             getMascotas();
+        }).finally(() => {
+            setIsLoading(false);
         });
     }
 
     const deleteMascota = (id) => {
+        setIsLoading(true);
         Axios.delete(`https://api-vet-zeta.vercel.app/deleteMascota/${id}`).then(() => {
             alert("Mascota Eliminada");
             limpiarDatos();
             getMascotas();
+        }).finally(() => {
+            setIsLoading(false);
         });
     }
 
@@ -76,33 +86,39 @@ function Mascotas() {
     }
 
     const getMascotas = () => {
+        setIsLoading(true);
         Axios.get("https://api-vet-zeta.vercel.app/mascotas").then((response) => {
             setMascotas(response.data);
+        }).finally(() => {
+            setIsLoading(false);
         });
     }
 
     const getUsuarios = () => {
+        setIsLoading(true);
         Axios.get("https://api-vet-zeta.vercel.app/usuarios").then((response) => {
             setListaUsuarios(response.data); // Guardar la lista de usuarios
+        }).finally(() => {
+            setIsLoading(false);
         });
     }
 
     return (
         <div className='App'>
             <div className='datos'>
-                <label htmlFor="">Nombre: <input value={nombre} 
+                <label>Nombre: <input value={nombre} 
                     onChange={(event) => setNombre(event.target.value)}
                     type="text" placeholder="Ingresa el nombre de la mascota" /></label>
 
-                <label htmlFor="">Especie: <input value={especie} 
+                <label>Especie: <input value={especie} 
                     onChange={(event) => setEspecie(event.target.value)}
                     type="text" placeholder="Ingresa la especie" /></label>
 
-                <label htmlFor="">Edad: <input value={edad} 
+                <label>Edad: <input value={edad} 
                     onChange={(event) => setEdad(event.target.value)}
                     type="number" placeholder="Ingresa la edad" /></label>
 
-                <label htmlFor="">ID Usuario: 
+                <label>ID Usuario: 
                     <select value={id_usuario} onChange={(event) => setIdUsuario(event.target.value)} className="id-usuario">
                         <option value="">Selecciona un usuario</option>
                         {listaUsuarios.map((usuario) => (
@@ -116,30 +132,32 @@ function Mascotas() {
                 <div>
                     {editar ? (
                         <>
-                            <button className="btn btn-update" onClick={update}>Actualizar</button>
-                            <button className="btn btn-delete" onClick={limpiarDatos}>Cancelar</button>
+                            <button onClick={update}>Actualizar</button>
+                            <button onClick={limpiarDatos}>Cancelar</button>
                         </>
                     ) : (
-                        <button className="btn btn-update" onClick={add}>Registrar Mascota</button>
+                        <button onClick={add}>Registrar Mascota</button>
                     )}
                 </div>
             </div>
 
             <div className="listaMascotas">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th>Especie</th>
-                            <th>Edad</th>
-                            <th>ID Usuario</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {listaMascotas.map((val) => {
-                            return (
+                {isLoading ? (
+                    <div className="spinner"></div> // Spinner mientras carga
+                ) : (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Especie</th>
+                                <th>Edad</th>
+                                <th>ID Usuario</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {listaMascotas.map((val) => (
                                 <tr key={val.id}>
                                     <td>{val.id}</td>
                                     <td>{val.nombre}</td>
@@ -148,15 +166,15 @@ function Mascotas() {
                                     <td>{val.id_usuario}</td>
                                     <td>
                                         <div>
-                                            <button className="btn btn-update" onClick={() => editarMascota(val)}>Actualizar</button>
-                                            <button className="btn btn-delete" onClick={() => deleteMascota(val.id)}>Eliminar</button>
+                                            <button onClick={() => editarMascota(val)}>Actualizar</button>
+                                            <button onClick={() => deleteMascota(val.id)}>Eliminar</button>
                                         </div>
                                     </td>
                                 </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );

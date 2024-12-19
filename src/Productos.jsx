@@ -13,6 +13,8 @@ function Productos() {
     const [idProducto, setIdProducto] = useState("");
     const [editarProducto, setEditarProducto] = useState(false);
     const [listaProductos, setProductos] = useState([]);
+    const [loading, setLoading] = useState(false); // Estado para el indicador de carga
+
 
     // Función para obtener productos al cargar el componente
     useEffect(() => {
@@ -98,12 +100,17 @@ function Productos() {
     }
 
     const getProductos = () => {
-        Axios.get("https://api-vet-zeta.vercel.app/productos").then((response) => {
-            setProductos(response.data);
-        }).catch((error) => {
-            console.error("Error al obtener productos:", error);
-        });
-    }
+        setLoading(true); // Inicia el indicador de carga
+        Axios.get("https://api-vet-zeta.vercel.app/productos")
+            .then((response) => {
+                setProductos(response.data);
+                setLoading(false); // Detiene el indicador de carga
+            })
+            .catch((error) => {
+                console.error("Error al obtener productos:", error);
+                setLoading(false); // Detiene el indicador de carga incluso si hay error
+            });
+    };
 
     return (
         <div className='App'>
